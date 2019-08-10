@@ -1,10 +1,10 @@
 var StellarSdk = require('stellar-sdk');
 var rootAccount = require('./rootAccount.json');
+const URL_dir = '/home/caideyi/Benchmarking/t-stellar/script/baseURL'
 const sleep = require('sleep');
-var server = new StellarSdk.Server('http://localhost:8000',{allowHttp: true});
 var fs = require('fs');
 StellarSdk.Network.use(new StellarSdk.Network("stellar"));
-
+var server ;
 var sourceKeys = StellarSdk.Keypair.fromSecret(rootAccount.privateKey);
 const ManyAcc = 20000 ;
 const MaxOperation = 5000 ;
@@ -13,6 +13,8 @@ main();
 
 async function main(){
 
+
+  await URL();
   console.log("Create Account");
   await createStartingAccount () ;
   await console.log("Done");
@@ -136,3 +138,31 @@ async function createAcc( keypair , amount , start , end , acc){
     })
       
   }
+
+  async function url ( baseUrl ) {
+	
+    ii = baseUrl.length/threadNum;
+    if (ii < 3) {
+      baseURL2[0] = baseUrl[0];
+      return true;
+    }
+    for ( var i = 0 ; i < ii ; i ++ ) {
+      baseURL2[i] = baseUrl[threadId+i*threadNum];
+    }
+    return true;
+  }
+
+  async function getURL(dir) { 
+
+    var array = fs.readFileSync(dir).toString().split("\n");
+    array.splice(array.length-1,1);
+    return array;
+
+}
+
+async function URL(){
+  let baseURL = await getURL(URL_dir);
+  console.log(baseURL);
+  server = new StellarSdk.Server(baseURL[0],{allowHttp: true});
+  return true ;
+}
