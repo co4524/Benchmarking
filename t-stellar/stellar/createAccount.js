@@ -6,6 +6,7 @@ var fs = require('fs');
 StellarSdk.Network.use(new StellarSdk.Network("stellar"));
 var server ;
 var sourceKeys = StellarSdk.Keypair.fromSecret(rootAccount.privateKey);
+var baseURL2 = [];
 const ManyAcc = 20000 ;
 const MaxOperation = 5000 ;
 

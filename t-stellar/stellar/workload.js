@@ -1,12 +1,13 @@
-const api = require('/home/caideyi/stellar/stellar/index.js');
+const api = require('/home/caideyi/Benchmarking/t-stellar/stellar/index.js');
+const URL_dir = '/home/caideyi/Benchmarking/t-stellar/script/baseURL'
 const path_CommitTime = '/home/caideyi/data/blockCommitTime.txt'
 const path_txRequestTime = '/home/caideyi/data/txRequestTime'
 const path_blockTxNum = '/home/caideyi/data/blockTxNum.txt'
 const fs = require('fs');
 const moment = require('moment');
-var baseURL = 'http://localhost:8000';
 var StellarSdk = require('stellar-sdk');
-var server = new StellarSdk.Server( baseURL ,{allowHttp: true});
+//var server = new StellarSdk.Server( baseURL ,{allowHttp: true});
+var server = [];
 //use private network
 StellarSdk.Network.use(new StellarSdk.Network("stellar"));
 //If the local Horizon connects with the testnet
@@ -17,6 +18,7 @@ StellarSdk.Network.use(new StellarSdk.Network("stellar"));
 const total_tx = parseInt( process.argv[2] ,10) ; 
 var source =  require('./keystore.json');
 var acc =  require('./testAcc.json');
+var baseURL2 = [];
 //console.log(sourceKeys);
 //var destinationId = 'GBBAJPWGVUWJM7DWKKKH5NOONYJL3NPWRZTQCYFQPAUYN34LH6NNNJZ3';
 // Transaction will hold a built transaction we can resubmit if the result is unknown.
@@ -32,6 +34,12 @@ async function main () {
     console.log( "Usage : node sendTx.js [total_txs] ")
     return true ;
   }
+
+  let baseURL = await getURL(URL_dir);
+
+  await url(baseURL);
+  console.log(baseURL2);
+  await getServer(baseURL2);
 
   let txInfo = await workloader( total_tx );
   let request_time = txInfo[1];
@@ -103,7 +111,7 @@ async function getLedgerInfo ( tx , reqTime) {
 
     //Get commit time for each block
     for (var i = 0 ; i < Object.keys(stat).length ; i ++){
-      let result = await api.getLedger( baseURL , Object.keys(stat)[i] ); 
+      let result = await api.getLedger( baseURL2[0] , Object.keys(stat)[i] ); 
       blockCommitTime[i] = moment.utc( result.closed_at.replace('Z','.500-00:00') ).valueOf() ;
     }
 
@@ -136,9 +144,10 @@ async function workloader ( amount ) {
   var to = source.table;
   var res = [];
   var sendTime = [];
+  var ll = baseURL2.length;
 
   for (var i =0 ; i < amount ; i++){
-    res[i] = SendTx( from[i].privateKey , to[0].publicKey );
+    res[i] = SendTx( from[i].privateKey , to[0].publicKey , i%ll);
     sendTime[i] = moment().valueOf();
   }
 
@@ -147,7 +156,7 @@ async function workloader ( amount ) {
 
 }
 
-async function SendTx( from_privateKey , des_publicKey ){
+async function SendTx( from_privateKey , des_publicKey , index ){
   var transaction;
   var sourceKeys = StellarSdk.Keypair.fromSecret(from_privateKey);
   // First, check to make sure that the destination account exists.
@@ -155,14 +164,14 @@ async function SendTx( from_privateKey , des_publicKey ){
   // the transaction fee when the transaction fails.
   return new Promise((resolve, reject) => { 
 
-    server.loadAccount(des_publicKey)
+    server[index].loadAccount(des_publicKey)
       // If the account is not found, surface a nicer error message for logging.
       .catch(StellarSdk.NotFoundError, function (error) {
         throw new Error('The destination account does not exist!');
       })
       // If there was no error, load up-to-date information on your account.
       .then(function() {
-        return server.loadAccount(sourceKeys.publicKey());
+        return server[index].loadAccount(sourceKeys.publicKey());
       })
 
       .then(function(sourceAccount) {
@@ -183,7 +192,7 @@ async function SendTx( from_privateKey , des_publicKey ){
         // Sign the transaction to prove you are actually the person sending it.
         transaction.sign(sourceKeys);
         // And finally, send it off to Stellar!
-        return server.submitTransaction(transaction);
+        return server[index].submitTransaction(transaction);
       })
       .then(function(result) {
         //console.log('Success! Results:',result.ledger);
@@ -226,5 +235,34 @@ async function outputData( _path , _value ) {
       }
   }
   return true;
+
+}
+
+async function getServer ( baseUrl ) {
+
+  for ( var i = 0 ; i < baseUrl.length ; i ++ ) {
+    server[i] =  new StellarSdk.Server(baseUrl[i],{allowHttp: true});
+  }
+  return true;
+}
+
+async function url ( baseUrl ) {
+	
+  ii = baseUrl.length;
+  if (ii < 3) {
+    baseURL2[0] = baseUrl[0];
+    return true;
+  }
+  for ( var i = 0 ; i < ii ; i ++ ) {
+    baseURL2[i] = baseUrl[i];
+  }
+  return true;
+}
+
+async function getURL(dir) { 
+
+  var array = fs.readFileSync(dir).toString().split("\n");
+  array.splice(array.length-1,1);
+  return array;
 
 }
