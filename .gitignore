@@ -2,3 +2,5 @@
  .*.swo
  */vendor
  */.glide
+ __pycache__
+ *.txt
