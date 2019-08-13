@@ -4,6 +4,7 @@ const path_CommitTime = '/home/caideyi/data/blockCommitTime.txt'
 const path_txRequestTime = '/home/caideyi/data/txRequestTime'
 const path_blockTxNum = '/home/caideyi/data/blockTxNum.txt'
 const fs = require('fs');
+const sleep = require('sleep');
 const moment = require('moment');
 var StellarSdk = require('stellar-sdk');
 //var server = new StellarSdk.Server( baseURL ,{allowHttp: true});
@@ -143,11 +144,29 @@ async function workloader ( amount ) {
   var from = acc.table;
   var to = source.table;
   var res = [];
+  var tx = [];
   var sendTime = [];
   var ll = baseURL2.length;
+  var rawtx = [];
 
-  for (var i =0 ; i < amount ; i++){
-    res[i] = SendTx( from[i].privateKey , to[0].publicKey , i%ll);
+  console.log("Generate transaction....");
+  for (var i = 0 ; i < amount ; i++){
+    tx[i] = GenRawTx( from[i].privateKey , to[0].publicKey , i%ll);
+    // if (i%200==0){
+    //   console.log("FF");
+    // }
+  }
+  await Promise.all(tx) ;
+  console.log("Done");
+  for (var i = 0 ; i < amount ; i++ ){
+    rawtx[i] = await tx[i];
+  }
+
+
+  await sleep.sleep(1);
+  console.log("Sending transaction....");
+  for (var i = 0 ; i < amount ; i++){
+    res[i] = sendTx( rawtx[i] , i%ll );
     sendTime[i] = moment().valueOf();
   }
 
@@ -156,24 +175,33 @@ async function workloader ( amount ) {
 
 }
 
-async function SendTx( from_privateKey , des_publicKey , index ){
+async function sendTx( tx , index ){
+  return new Promise((resolve, reject) => { 
+    return server[index].submitTransaction(tx)
+    .then(function(result) {
+      //console.log('Success! Results:',result);
+      resolve( result.ledger );
+    })
+    .catch(function(error) {
+      //console.error('Something went wrong!', error);
+      resolve(error);
+      // If the result is unknown (no response body, timeout etc.) we simply resubmit
+      // already built transaction:
+      // server.submitTransaction(transaction);
+    });
+  })
+}
+
+
+async function GenRawTx( from_privateKey , des_publicKey , index ){
   var transaction;
   var sourceKeys = StellarSdk.Keypair.fromSecret(from_privateKey);
   // First, check to make sure that the destination account exists.
   // You could skip this, but if the account does not exist, you will be charged
   // the transaction fee when the transaction fails.
-  return new Promise((resolve, reject) => { 
+  return new Promise((resolve, reject) => {
 
-    server[index].loadAccount(des_publicKey)
-      // If the account is not found, surface a nicer error message for logging.
-      .catch(StellarSdk.NotFoundError, function (error) {
-        throw new Error('The destination account does not exist!');
-      })
-      // If there was no error, load up-to-date information on your account.
-      .then(function() {
-        return server[index].loadAccount(sourceKeys.publicKey());
-      })
-
+    server[index].loadAccount(sourceKeys.publicKey())
       .then(function(sourceAccount) {
         // Start building the transaction.
         transaction = new StellarSdk.TransactionBuilder(sourceAccount , opts={fee:100})
@@ -192,14 +220,15 @@ async function SendTx( from_privateKey , des_publicKey , index ){
         // Sign the transaction to prove you are actually the person sending it.
         transaction.sign(sourceKeys);
         // And finally, send it off to Stellar!
-        return server[index].submitTransaction(transaction);
+        return transaction;
+        //return server[index].submitTransaction(transaction);
       })
-      .then(function(result) {
+      .then(function(transaction) {
         //console.log('Success! Results:',result.ledger);
-        resolve( result.ledger );
+        resolve( transaction );
       })
       .catch(function(error) {
-        //console.error('Something went wrong!', error);
+        console.error('Something went wrong!', error);
         resolve(error);
         // If the result is unknown (no response body, timeout etc.) we simply resubmit
         // already built transaction:

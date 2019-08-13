@@ -28,7 +28,7 @@ Reset(){
 }
 
 WorkLoad(){
-	node $path_workload $1
+	node $path_workload $1 $2
 }
 
 
@@ -40,7 +40,7 @@ main(){
 		echo "---------------------------------------------------"
 		echo "Testing totalTxNum : $1"
 		echo "Sending transaction ......"
-		WorkLoad $1 
+		WorkLoad $1
 		echo "CalPerformance....."
 		python $path_cal $1
 		sleep 1
