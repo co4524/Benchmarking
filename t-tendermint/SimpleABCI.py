@@ -78,8 +78,8 @@ class PlasmaCash(BaseApplication):
         return r
 
     def init_chain(self, req) -> ResponseInitChain:
-        path1 = "./out1.txt"#"/home/caideyi/TendermintOnEvm_benchmark/data/blockCommitTime.txt"
-        path2 = "./out2.txt"#"/home/caideyi/TendermintOnEvm_benchmark/data/blockTxNum.txt"
+        path1 = "/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt"
+        path2 = "/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt"
         try:
             os.remove(path1)
         except:
@@ -136,7 +136,11 @@ class PlasmaCash(BaseApplication):
         '''
         if self.txIndex != 0:
             self.f1.write(format(int(time.time()*1000)))
+            self.f1.write('\n')
+            self.f1.flush()
             self.f2.write(format(self.txIndex))
+            self.f2.write('\n')
+            self.f2.flush()
         ret = [self.txIndex]
         self.txIndex = 0
         return ResponseCommit(data=bytes(ret))
