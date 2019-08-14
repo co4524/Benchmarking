@@ -1,32 +1,30 @@
-path_CommitTime = '/home/caideyi/TendermintOnEvm_benchmark/data/blockCommitTime.txt'
-path_txRequestTime = '/home/caideyi/evm-lite-js/test/txRequestTime'
-path_blockTxNum = '/home/caideyi/TendermintOnEvm_benchmark/data/blockTxNum.txt'
-path_report = '/home/caideyi/TendermintOnEvm_benchmark/report/report'
-path_tps = '/home/caideyi/TendermintOnEvm_benchmark/report/tps.txt'
-path_latency = '/home/caideyi/TendermintOnEvm_benchmark/report/latency.txt'
-path_txRate = '/home/caideyi/TendermintOnEvm_benchmark/report/txRate.txt'
-path_fail = '/home/caideyi/TendermintOnEvm_benchmark/report/fail.txt'
-path_nonce = '/home/caideyi/evm-lite-js/test/Nonce'
-path_nonce2 = '/home/caideyi/evm-lite-js/test/Nonce2'
-path_txList = '/home/caideyi/evm-lite-js/test/txList'
+
+path_CommitTime = '/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt'
+path_txRequestTime = '/home/caideyi/Benchmarking/t-tendermint/data/txRequestTime'
+path_blockTxNum = '/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt'
+
+
+path_report = '/home/caideyi/Benchmarking/t-tendermint/report/report'
+path_tps = '/home/caideyi/Benchmarking/t-tendermint/report/tps.txt'
+path_latency = '/home/caideyi/Benchmarking/t-tendermint/report/latency.txt'
+path_txRate = '/home/caideyi/Benchmarking/t-tendermint/report/txRate.txt'
+path_fail = '/home/caideyi/Benchmarking/t-tendermint/report/fail.txt'
+
 
 fp_blockTxNum = open(path_blockTxNum, "r")
 fp_txRequestTime = open(path_txRequestTime, "r")
 fp_preCommitTime = open(path_CommitTime, "r")
-#fp_nonce = open(path_nonce , "r")
-#fp_nonce2 = open(path_nonce2 , "r")
+
 
 blockTxNum = fp_blockTxNum.readlines()
 txRequestTime = fp_txRequestTime.readlines()
 commitTime = fp_preCommitTime.readlines()
-#nonce = fp_nonce.readlines()
-#nonce2 = fp_nonce2.readlines()
+
 
 fp_blockTxNum.close()
 fp_txRequestTime.close()
 fp_preCommitTime.close()
-#fp_nonce.close()
-#fp_nonce2.close()
+
 
 def Debug():
     for i in range(len(txRequestTime)):
@@ -36,38 +34,9 @@ Debug()
 print (blockTxNum)
 s_txRequestTime = sorted (txRequestTime )
 
-def detet():
-	fList = open(path_txList , "a")
-	num = 0;
-	suc = 0;
-	index = 0 ;
-	latency = 0;
-	total_latency = 0;
-	total_success = 0;
-	
-	for i in range(len(nonce)):
-		if(int(nonce[i])==int(nonce2[i])):
-			num+=1
-			fList.write( "F" + "\n")
-		elif(int(nonce[i])!=int(nonce2[i])):
-			suc+=1
-			total_success+=1
-			fList.write( "T" + "\n")
-			latency = float(commitTime[index]) - float(txRequestTime[i])
-			total_latency += latency
-		if(suc==int(blockTxNum[index]) and index < len(blockTxNum)-1 ):
-			fList.write( "----" + "\n")
-			#print(index , suc)
-			suc = 0
-			index+=1
-	print("AVG_LATENCY: ", (total_latency/(total_success*1000)) )
-	print("FAIL: ",num)
-		
-#detet()
 
 def detetFail():
     suc = 0 
-    total_send = len(s_txRequestTime)
     for i in range(len(blockTxNum)):
         suc += int(blockTxNum[i])
     fail = total_send - suc
@@ -107,7 +76,7 @@ def latency():
         
     for i in range(0,len(blockTxNum)):
         for j in range(int(blockTxNum[i])):
-            la = (float(commitTime[i])-float(s_txRequestTime[start])) / 1000
+            la = (float(commitTime[i])-float(txRequestTime[start])) / 1000
             total_latency += la
             start+=1
 
