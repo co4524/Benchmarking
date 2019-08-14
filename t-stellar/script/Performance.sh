@@ -1,3 +1,4 @@
+export TZ=UTC-8
 
 path2=$HOME/report
 path_report=$path2/report
@@ -5,11 +6,13 @@ path_tps=$path2/tps.txt
 path_txRate=$path2/txRate.txt
 path_latency=$path2/latency.txt
 path_fail=$path2/fail.txt
+path_time=$path2/time
 ####################################################
 path_avg_tps=$path2/tps
 path_avg_latency=$path2/latency
 path_avg_txRate=$path2/txRate
 path_avg_fail=$path2/fail
+
 path_workload=$HOME/Benchmarking/t-stellar/stellar/workload.js
 path_cal=$HOME/Benchmarking/t-stellar/stellar/cal.py
 
@@ -49,6 +52,9 @@ main(){
 }
 
 Reset
+a=$(date)
+echo $path_time
+echo "total : $1  , time : $a" >> $path_time
 main $1 $2   #[1] tx_num  [2]: iter 
 echo "Evaluate Variance&Mean..."
 python3 variance.py

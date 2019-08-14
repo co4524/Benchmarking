@@ -1,9 +1,11 @@
 path2=$HOME/report
+
 path_report=$path2/report
 path_avg_tps=$path2/tps
 path_avg_latency=$path2/latency
 path_avg_txRate=$path2/txRate
 path_avg_fail=$path2/fail
+path_time=$path2/time
 
 path_var_tps=$path2/vTps
 path_var_latency=$path2/vLatency
@@ -47,6 +49,7 @@ ResetReport(){
 	rm $path_var_txRate
 	rm $path_avg_fail
 	rm $path_var_fail
+	rm $path_time
 	touch $path_avg_tps
 	touch $path_avg_latency
 	touch $path_avg_txRate
@@ -56,6 +59,7 @@ ResetReport(){
 	touch $path_var_txRate
 	touch $path_avg_fail
 	touch $path_var_fail
+	touch $path_time
 }
 
 Benchmark() {
@@ -68,5 +72,5 @@ Benchmark() {
 }
 
 ResetReport
-Benchmark $1 
+Benchmark 10
 #[1]:iter
