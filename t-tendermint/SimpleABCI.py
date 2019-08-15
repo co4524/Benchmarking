@@ -25,6 +25,8 @@ operator_key = '0xa18969817c2cefadf52b93eb20f917dce760ce13b2ac9025e0361ad1e7a1d4
 operator_normalize_key = utils.normalize_key(operator_key)
 authority = utils.privtoaddr(operator_key)
 authority_address = w3.toChecksumAddress('0x' + authority.hex())
+path1 = "/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt"
+path2 = "/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt"
 
 
 class RequestFailedException(Exception):
@@ -78,19 +80,6 @@ class PlasmaCash(BaseApplication):
         return r
 
     def init_chain(self, req) -> ResponseInitChain:
-        path1 = "/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt"
-        path2 = "/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt"
-        try:
-            os.remove(path1)
-        except:
-            print("no {0}".format(path1))
-        try:
-            os.remove(path2)
-        except:
-            print("no {0}".format(path2))
-
-        self.f1 = open(path1, 'a')
-        self.f2 = open(path2, 'a')
         self.last_block_height = 0
         self.txIndex = 0
         return ResponseInitChain()
@@ -135,12 +124,16 @@ class PlasmaCash(BaseApplication):
         return ResponseCommit(data=bytes.fromhex(ret.text))
         '''
         if self.txIndex != 0:
+
+            self.f1 = open(path1, 'a')
+            self.f2 = open(path2, 'a')
             self.f1.write(format(int(time.time()*1000)))
             self.f1.write('\n')
             self.f1.flush()
             self.f2.write(format(self.txIndex))
             self.f2.write('\n')
             self.f2.flush()
+            
         ret = [self.txIndex]
         self.txIndex = 0
         return ResponseCommit(data=bytes(ret))

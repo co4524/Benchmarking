@@ -1,5 +1,5 @@
-path_blockTxNum = '/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt'
-path_CommitTime = '/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt'
+path_blockTxNum=$HOME/Benchmarking/t-tendermint/data/blockTxNum.txt
+path_CommitTime=$HOME/Benchmarking/t-tendermint/data/blockCommitTime.txt
 
 rm $path_blockTxNum
 rm $path_CommitTime
