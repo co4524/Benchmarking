@@ -134,9 +134,9 @@ class PlasmaCash(BaseApplication):
             self.f2.write('\n')
             self.f2.flush()
             
-        ret = [self.txIndex]
+        #ret = [self.txIndex]
         self.txIndex = 0
-        return ResponseCommit(data=bytes(ret))
+        return ResponseCommit()#data=bytes(ret))
 
 
 if __name__ == '__main__':
