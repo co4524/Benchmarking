@@ -46,7 +46,7 @@ WorkLoad(){
 
 SCP_instance(){
 
-	nohup gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "$1" -- './Benchmarking/t-tendermint/scp.sh' > nohup.out 2>&1 
+	gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "$1" -- "./Benchmarking/t-tendermint/nodeScript/scp.sh"
 	echo "Transfer done!!"
 
 }
@@ -54,11 +54,13 @@ SCP_instance(){
 main(){
 
 	echo "-------------------Start Testing-------------------"
+	nonce=$3
 	for ((j=0 ; j<$2 ; j++)){
 		echo "---------------------------------------------------"
 		echo "Testing totalTxNum : $1"
 		ResetLogFile
-		node $path_genRaw $1 $3
+		node $path_genRaw $1 $nonce
+		let nonce=nonce+1
 		sleep 1
 		echo "Sending transaction ......"
 		WorkLoad $1
@@ -66,7 +68,7 @@ main(){
 	    echo "Transfer data....."	
 		SCP_instance $SCP_NODE_NAME
 		echo "CalPerformance....."
-		python $path_cal
+		python $path_cal $1
 		sleep 2
 
 	}

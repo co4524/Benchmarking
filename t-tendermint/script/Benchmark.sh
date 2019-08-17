@@ -17,28 +17,6 @@ nodeNum=1    #workload Send txNum
 txTime=5   #test time
 batchNum=0
 
-intervalTime=(
-10
-5
-2.5
-1.66
-1.25
-1
-0.832
-0.625
-0.5
-0.41
-0.35
-0.31
-0.27
-0.25
-0.22
-0.2
-0.19
-#0.17
-#0.16
-)
-
 txTotalSend=(
 100
 200
@@ -87,21 +65,19 @@ ResetReport(){
 
 Benchmark() {
 
-	index=0
-	for i in "${intervalTime[@]}"
+	index=1
+	iter=$1
+	for i in "${txTotalSend[@]}"
 	do
-		./Performance.sh $i ${txTotalSend[$index]} $1 $2 $3
-		#[1]:interval time 
-		#[2]:total send  
-		#[3]:iter 
-		#[4]:instance_name 
-		let index=index+1
+		./Performance.sh $i $1 $index
+
+		let index=index+iter
 	done
 
 }
 
-nohup gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "$2" -- './TendermintOnEvm_benchmark/workLoadGenerator/reset.sh' > nohup.out 2>&1
+gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" -- './home/caideyi/Benchmarking/t-tendermint/nodeScript/dataReset.sh'
 ResetReport
-Benchmark $1 $2 $3
+Benchmark 10
 #[1]:iter
 #[2]:instance_name

@@ -1,3 +1,5 @@
+import sys
+total_send = int(sys.argv[1] )
 
 path_CommitTime = '/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt'
 path_txRequestTime = '/home/caideyi/Benchmarking/t-tendermint/data/txRequestTime'

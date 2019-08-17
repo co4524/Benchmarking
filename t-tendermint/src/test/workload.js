@@ -19,8 +19,12 @@ async function testBasicAPI() {
     console.log(baseURL);
 
      let rawTxList = await GetRawTx (Rawtx_dir) ; 
-     await workload ( rawTxList , iter ) ;
+     let result = await workload ( rawTxList , iter ) ;
      await txRequestTime(Requst_dir);
+
+    //  for ( var i = 0 ; i < result.length ; i ++){
+    //     console.log(result[i]);
+    //  }
 
 }
 
@@ -32,9 +36,13 @@ async function workload ( rawTx , iter ) {
 
 	for ( var i =0 ; i < iter ; i++ ) {
 		res[i] = api.sendTx( baseURL[i%ll] , rawTx[i] );
-		sendTime[i] = moment().valueOf();
+        sendTime[i] = moment().valueOf();
+        if(i%2000==0){
+            console.log("Send tx")
+        }
 	}
     await Promise.all(res) ;
+    return res;
 }
 
 
