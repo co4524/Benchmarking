@@ -1,3 +1,5 @@
+export TZ=UTC-8
+
 path=$HOME/Benchmarking/t-tendermint/data
 path_blockTxNum=$path/blockTxNum.txt
 path_blockCommitTime=$path/blockCommitTime.txt
@@ -9,6 +11,7 @@ path_tps=$path2/tps.txt
 path_txRate=$path2/txRate.txt
 path_latency=$path2/latency.txt
 path_fail=$path2/fail.txt
+path_time=$path2/time
 ####################################################
 path_avg_tps=$path2/tps
 path_avg_latency=$path2/latency
@@ -50,6 +53,9 @@ SCP_instance(){
 	echo "Transfer done!!"
 
 }
+CheckSum(){
+	gcloud compute --project caideyi ssh --zone asia-east1-b tendermint -- "python Benchmarking/t-tendermint/data/checkSum.py $1"
+}
 
 main(){
 
@@ -64,7 +70,8 @@ main(){
 		sleep 1
 		echo "Sending transaction ......"
 		WorkLoad $1
-
+		echo "Checking Sum ......"
+		CheckSum $1
 	    echo "Transfer data....."	
 		SCP_instance $SCP_NODE_NAME
 		echo "CalPerformance....."
@@ -75,6 +82,9 @@ main(){
 }
 
 Reset
+a=$(date)
+echo $path_time
+echo "total : $1  , time : $a" >> $path_time
 main $1 $2 $3  ##[1] tx_num  [2] iter  [3]: nonce_value 
 echo "Evaluate Variance&Mean..."
 python variance.py

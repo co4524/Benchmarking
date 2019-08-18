@@ -1,6 +1,6 @@
 #  [0]: localhost
 #  [1~]: remote
-URL_path=$HOME/evm-lite-js/test/baseURL
+URL_path=$HOME/Benchmarking/t-tendermint/src/test/baseURL
 rm $URL_path
 nodeNum=$1
 base="10.140.1"

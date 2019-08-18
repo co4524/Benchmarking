@@ -1,7 +1,7 @@
 const api = require('/home/caideyi/Benchmarking/t-tendermint/src/index.js');
 const moment = require('moment');
 const fs = require('fs');
-
+const sleep = require('sleep');
 // ethereum root directory (for retreive keystore) and keystore password
 const URL_dir = '/home/caideyi/Benchmarking/t-tendermint/src/test/baseURL'
 const Rawtx_dir = '/home/caideyi/Benchmarking/t-tendermint/src/test/RawTx'
@@ -14,13 +14,26 @@ testBasicAPI()
 
 async function testBasicAPI() {
 
-    baseURL = await getURL(URL_dir);
+    baseURL = await getURL(URL_dir)
 
-    console.log(baseURL);
+    console.log(baseURL)
 
-     let rawTxList = await GetRawTx (Rawtx_dir) ; 
-     let result = await workload ( rawTxList , iter ) ;
-     await txRequestTime(Requst_dir);
+    let rawTxList = await GetRawTx (Rawtx_dir) 
+
+
+    let tendermintInfo1 = await api.tendermintInfo( baseURL[0] ) 
+    while(true){
+        let tendermintInfo2 = await api.tendermintInfo( baseURL[0] ) 
+        console.log("Current Block Hwight :　" , tendermintInfo2.result.sync_info.latest_block_height);
+        if (tendermintInfo2.result.sync_info.latest_block_height!=tendermintInfo1.result.sync_info.latest_block_height){
+            break
+        }
+        await sleep.msleep(500)
+    }
+
+
+    await workload ( rawTxList , iter ) ;
+    await txRequestTime(Requst_dir);
 
     //  for ( var i = 0 ; i < result.length ; i ++){
     //     console.log(result[i]);
@@ -32,17 +45,16 @@ async function testBasicAPI() {
 async function workload ( rawTx , iter ) {
 
     ll = baseURL.length;
-    var res = [];
 
 	for ( var i =0 ; i < iter ; i++ ) {
-		res[i] = api.sendTx( baseURL[i%ll] , rawTx[i] );
+		api.sendTx( baseURL[i%ll] , rawTx[i] );
         sendTime[i] = moment().valueOf();
         if(i%2000==0){
             console.log("Send tx")
         }
 	}
-    await Promise.all(res) ;
-    return res;
+    await Promise.all(sendTime) ;
+    return sendTime;
 }
 
 
