@@ -4,9 +4,13 @@ then
 	#gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" --command="nohup ./Benchmarking/t-tendermint/nodeScript/abciServer.sh > /dev/null 2> /dev/null < /dev/null &"
 	gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" --command="./Benchmarking/t-tendermint/nodeScript/start.sh"
 else
-    for ((i=0 ; i < $1 ; i ++)){
-        gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "node$i" --command="rm -r .tendermint"
-        gcloud compute scp -recurse ~/mytestnet/node$i/tendermint node$i:~/.tendermint
-        gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "node$i" --command="./Benchmarking/t-tendermint/nodeScript/start.sh"
+	cd /home/caideyi/Benchmarking/t-tendermint/configAutoGen
+    ./configGen.sh $1
+    cd /home/caideyi/Benchmarking/t-tendermint/src/test
+    ./preprocess.sh $2
+    for ((i=0 ; i < $2 ; i ++)){
+        gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint$i" --command="rm -r .tendermint"
+        gcloud compute scp --recurse ~/mytestnet/node$i/tendermint tendermint$i:~/.tendermint --zone "asia-east1-b"
+        gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint$i" --command="./Benchmarking/t-tendermint/nodeScript/start.sh"
     }
 fi

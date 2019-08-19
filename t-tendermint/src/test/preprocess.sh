@@ -3,7 +3,7 @@
 URL_path=$HOME/Benchmarking/t-tendermint/src/test/baseURL
 rm $URL_path
 nodeNum=$1
-base="10.140.1"
+base="10.140.4"
 ip="0"
 remoteURL(){
     for ((i=0 ; i<$nodeNum ; i++)) {

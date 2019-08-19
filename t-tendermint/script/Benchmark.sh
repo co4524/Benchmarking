@@ -79,8 +79,8 @@ Benchmark() {
 
 }
 
-gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" -- './Benchmarking/t-tendermint/nodeScript/dataReset.sh'
+gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint0" -- './Benchmarking/t-tendermint/nodeScript/dataReset.sh'
 ResetReport
-Benchmark 10
+Benchmark 5
 #[1]:iter
 #[2]:instance_name

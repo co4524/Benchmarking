@@ -23,7 +23,7 @@ path_cal=$path3/cal.py
 path_workload=$path3/workload.js
 path_genRaw=$path3/genRaw.js
 
-SCP_NODE_NAME="tendermint"
+SCP_NODE_NAME="tendermint0"
 
 ResetLogFile(){
 
@@ -54,7 +54,7 @@ SCP_instance(){
 
 }
 CheckSum(){
-	gcloud compute --project caideyi ssh --zone asia-east1-b tendermint -- "python Benchmarking/t-tendermint/data/checkSum.py $1"
+	gcloud compute --project caideyi ssh --zone asia-east1-b "$2" -- "python Benchmarking/t-tendermint/data/checkSum.py $1"
 }
 
 main(){
@@ -71,7 +71,7 @@ main(){
 		echo "Sending transaction ......"
 		WorkLoad $1
 		echo "Checking Sum ......"
-		CheckSum $1
+		CheckSum $1 $SCP_NODE_NAME
 	    echo "Transfer data....."	
 		SCP_instance $SCP_NODE_NAME
 		echo "CalPerformance....."
