@@ -16,8 +16,18 @@ path_avg_fail=$path2/fail
 path_workload=$HOME/Benchmarking/t-stellar/stellar/workload.js
 path_cal=$HOME/Benchmarking/t-stellar/stellar/cal.py
 
+path_CommitTime=$HOME/data/blockCommitTime.txt
+path_txRequestTime=$HOME/data/txRequestTime
+path_blockTxNum=$HOME/data/blockTxNum.txt
 
-
+ResetData(){
+	rm $path_CommitTime
+	rm $path_txRequestTime
+	rm $path_blockTxNum
+	touch $path_blockTxNum
+	touch $path_txRequestTime
+	touch $path_CommitTime
+}
 
 Reset(){
 	rm $path_tps
@@ -40,9 +50,9 @@ main(){
 
 	echo "-------------------Start Testing-------------------"
 	for ((j=0 ; j<$2 ; j++)){
+		ResetData
 		echo "---------------------------------------------------"
 		echo "Testing totalTxNum : $1"
-		echo "Sending transaction ......"
 		WorkLoad $1
 		echo "CalPerformance....."
 		python $path_cal $1
