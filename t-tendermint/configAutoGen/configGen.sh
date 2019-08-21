@@ -69,7 +69,7 @@ Modconf(){
 	echo $persistent_peers
 
 	for ((i=0 ; i<$1 ; i++)){
-		cp temp.toml config.toml
+		cp template.toml config.toml
 		sed -i "s/persistent_peers/$persistent_peers/g" config.toml
 		cp -f config.toml $tendermintTestnetPath/node$i/tendermint/config/.
 		rm config.toml
