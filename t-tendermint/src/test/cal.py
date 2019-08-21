@@ -1,120 +1,137 @@
 import sys
-total_send = int(sys.argv[1] )
+OVER_WRITE = False
 
-path_CommitTime = '/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt'
-path_txRequestTime = '/home/caideyi/Benchmarking/t-tendermint/data/txRequestTime'
-path_blockTxNum = '/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt'
+PATH_BLOCK_COMMIT_TIME = '/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt'
+PATH_TX_REQUEST_TIME = '/home/caideyi/Benchmarking/t-tendermint/data/txRequestTime'
+PATH_BLOCK_TX_NUM = '/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt'
 
+PATH_REPORT = '/home/caideyi/Benchmarking/t-tendermint/report/report'
+PATH_TPS = '/home/caideyi/Benchmarking/t-tendermint/data/tps'
+PATH_LATENCY = '/home/caideyi/Benchmarking/t-tendermint/data/latency'
+PATH_TX_RATE = '/home/caideyi/Benchmarking/t-tendermint/data/txRate'
+PATH_FAIL = '/home/caideyi/Benchmarking/t-tendermint/data/fail'
 
-path_report = '/home/caideyi/Benchmarking/t-tendermint/report/report'
-path_tps = '/home/caideyi/Benchmarking/t-tendermint/report/tps.txt'
-path_latency = '/home/caideyi/Benchmarking/t-tendermint/report/latency.txt'
-path_txRate = '/home/caideyi/Benchmarking/t-tendermint/report/txRate.txt'
-path_fail = '/home/caideyi/Benchmarking/t-tendermint/report/fail.txt'
+TOTAL_SEND = int( sys.argv[1] )
 
+# read file
+def readFile( _file_path ):
+    fp = open(_file_path, "r")
+    obj = fp.readlines()
+    fp.close()
 
-fp_blockTxNum = open(path_blockTxNum, "r")
-fp_txRequestTime = open(path_txRequestTime, "r")
-fp_preCommitTime = open(path_CommitTime, "r")
+    return obj
 
+# new round start , overwrite data (tps , latency , fail , txRate)
+def writeFileOption():
+    if ( int(sys.argv[2]) ==0 ):
+        global OVER_WRITE
+        OVER_WRITE = True
 
-blockTxNum = fp_blockTxNum.readlines()
-txRequestTime = fp_txRequestTime.readlines()
-commitTime = fp_preCommitTime.readlines()
+# debug , when submit lots of txs , there may be some "undefined" value in txReqestTime file
+def deBug(_txRequestTime):
+    for i in range(len(_txRequestTime)):
+        if(_txRequestTime[i]=='undefined\n'):
+            _txRequestTime[i]=_txRequestTime[i-1]
 
+    return _txRequestTime
 
-fp_blockTxNum.close()
-fp_txRequestTime.close()
-fp_preCommitTime.close()
-
-
-def Debug():
-    for i in range(len(txRequestTime)):
-        if(txRequestTime[i]=='undefined\n'):
-            txRequestTime[i]=txRequestTime[i-1]
-Debug()
-print (blockTxNum)
-s_txRequestTime = sorted (txRequestTime )
-
-
-def detetFail():
+# static fail transaction
+def detetFail( _block_tx_num ):
     suc = 0 
-    for i in range(len(blockTxNum)):
-        suc += int(blockTxNum[i])
-    fail = total_send - suc
-    print("total send" , total_send)
-    print("commit tx" , suc)
-    return float(fail)/float(total_send) 
+    for i in range(len(_block_tx_num)):
+        suc += int(_block_tx_num[i])
+    fail = TOTAL_SEND - suc
+    print("BlockInfo : " , _block_tx_num)
+    print("total send : " , TOTAL_SEND)
+    print("commit tx : " , suc)
 
-def txRate():
-    start = s_txRequestTime[0]
-    end = s_txRequestTime[len(s_txRequestTime)-1]
-    print("start",start)
-    print("end",end)
+    return float(fail)/float(TOTAL_SEND) 
+
+# calulate transaction rate : "total_send/(reqest_start_time - reqest_end_time)"
+def calculateTxRate( _tx_request_time ):
+    start = _tx_request_time[0]
+    end = _tx_request_time[len(_tx_request_time)-1]
     dur = (float(end) - float(start)) / 1000
-    txRate = float(len(s_txRequestTime)) / float(dur)
-    return txRate
+    tx_rate = float(len(_tx_request_time)) / float(dur)
+    print("TransactionRate : " , tx_rate)
 
-def tps():
-    start=0
-    start_time=s_txRequestTime[int(start)]
-    end_time=commitTime[len(commitTime)-1]
+    return tx_rate
+
+# calculate tps : "success txs/(reqest_start_time - last block commit time)"
+def calculateTps (_tx_request_time , _block_commit_time , _block_tx_num ):
+    start_time=_tx_request_time[0]
+    end_time=_block_commit_time[len(_block_commit_time)-1]
     dur_time=(float(end_time)-float(start_time))/ 1000
     total = 0 
      
-    for i in range(0,len(blockTxNum)):
-        total += int(blockTxNum[i])
+    for i in range(0,len(_block_tx_num)):
+        total += int(_block_tx_num[i])
+
+    print("TPS : " , total/dur_time)
 
     return (total/dur_time)
 
-
-def latency():
+# calculate latency : sigma[block_commit_time - request_time] / success_txs
+def calculateLatency( _tx_request_time ,_block_commit_time , _block_tx_num):
     total = 0 
     total_latency= 0
     start=0
 
-    for i in range(0,len(blockTxNum)):
-        total += int(blockTxNum[i])
+    for i in range(0,len(_block_tx_num)):
+        total += int(_block_tx_num[i])
         
-    for i in range(0,len(blockTxNum)):
-        for j in range(int(blockTxNum[i])):
-            la = (float(commitTime[i])-float(txRequestTime[start])) / 1000
-            total_latency += la
+    for i in range(0,len(_block_tx_num)):
+        for j in range(int(_block_tx_num[i])):
+            total_latency += (float(_block_commit_time[i])-float(_tx_request_time[start])) / 1000
             start+=1
 
     avg_latency = float(total_latency) / float(total)
+    print("Latency : " , avg_latency)
     return avg_latency
 
-def cal():
-
-    f = open(path_report, "a")
-    ftps = open(path_tps, "a")
-    flatency = open(path_latency, "a")
-    ftxRate = open(path_txRate, "a")
-    ffail = open(path_fail, "a")
-    _failTx = detetFail()
-    _txRate = txRate()
-    _tps = tps()
+# write Report 
+def writeReport(_tx_rate , _tps , _fail_tx , _latency , _block_tx_num):
+    f = open(PATH_REPORT, "a")
     f.write("-----------Report---------------\n")
-    f.write("txRate: " +str(_txRate)+ "\n")
-    f.write("tps: " +str(_tps)+ "\n")
-    f.write("failRate: " + str(_failTx) + "\n" )
-    ftps.write(str(_tps)+ "\n")
-    ftxRate.write(str(_txRate)+ "\n")
-    ffail.write(str(_failTx) + "\n")
-    print( "txRate: " , _txRate)
-    print( "tps" , _tps)
-    print( "failRate" , _failTx)
+    f.write("TotalSend: " +str(TOTAL_SEND)+ "\n")
+    f.write("BlockInfo: " +str(_block_tx_num)+ "\n")
+    f.write("TxRate: " +str(_tx_rate)+ "\n")
+    f.write("Tps: " +str(_tps)+ "\n")
+    f.write("FailRate: " + str(_fail_tx) + "\n" )
+    f.write("Latency: " +str(_latency)+ "\n")
 
-    _latency = latency()
-    f.write("latency: " +str(_latency)+ "\n")
-    flatency.write(str(_latency)+ "\n")
-    print( "Latency" , _latency)
-
+# write Report 
+def writeFile( _path , _value ):
+    if (OVER_WRITE==True):
+        f = open(_path, "w")
+    else :
+        f = open(_path, "a")
+    f.write(str(_value)+ "\n")
     f.close()
-    ftps.close()
-    ftxRate.close()
-    ffail.close()
-    flatency.close()
 
-cal()
+
+def main():
+
+    #Read file : request_time , block_tx_num , block_commit_time
+    tx_request_time=readFile(PATH_TX_REQUEST_TIME)
+    block_tx_num=readFile(PATH_BLOCK_TX_NUM)
+    block_commit_time=readFile(PATH_BLOCK_COMMIT_TIME)
+
+    #Calculate performance metric
+    tx_request_time=deBug(tx_request_time)
+    sorted_tx_request_time = sorted (tx_request_time )
+    fail = detetFail( block_tx_num )
+    tx_rate = calculateTxRate( sorted_tx_request_time )
+    tps = calculateTps( sorted_tx_request_time , block_commit_time , block_tx_num )
+    latency = calculateLatency( sorted_tx_request_time , block_commit_time , block_tx_num )
+
+    #write Report
+    writeFileOption()
+    writeReport( tx_rate , tps , fail , latency , block_tx_num)
+    writeFile( PATH_TX_RATE , tx_rate)
+    writeFile( PATH_TPS , tps)
+    writeFile( PATH_LATENCY , latency)
+    writeFile( PATH_FAIL , fail)
+
+
+main()

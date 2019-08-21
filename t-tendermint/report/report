@@ -1,255 +1,53 @@
+-------------------Start Testing-------------------
+=======New Round Testing transaction number: 8000=======
 -----------Report---------------
-txRate: 4166.66666667
-tps: 21.017234132
-failRate: 0.0
-latency: 4.74622
+TotalSend: 8000
+BlockInfo: ['8000\n']
+TxRate: 16771.488469601678
+Tps: 1455.8689717925386
+FailRate: 0.0
+Latency: 5.208601249999984
 -----------Report---------------
-txRate: 3846.15384615
-tps: 20.7382828702
-failRate: 0.0
-latency: 4.8086
+TotalSend: 8000
+BlockInfo: ['8000\n']
+TxRate: 15594.541910331383
+Tps: 1499.531396438613
+FailRate: 0.0
+Latency: 5.035541625000075
 -----------Report---------------
-txRate: 5000.0
-tps: 20.0964630225
-failRate: 0.0
-latency: 4.96348
+TotalSend: 8000
+BlockInfo: ['8000\n']
+TxRate: 17316.017316017314
+Tps: 1010.2285642126532
+FailRate: 0.0
+Latency: 7.640348250000087
+=======New Round Testing transaction number: 10000=======
 -----------Report---------------
-txRate: 5555.55555556
-tps: 20.3417412531
-failRate: 0.0
-latency: 4.90464
+TotalSend: 10000
+BlockInfo: ['10000\n']
+TxRate: 19267.822736030826
+Tps: 1813.2366273798732
+FailRate: 0.0
+Latency: 5.195117500000071
 -----------Report---------------
-txRate: 5555.55555556
-tps: 20.3998368013
-failRate: 0.0
-latency: 4.89103
+TotalSend: 10000
+BlockInfo: ['10000\n']
+TxRate: 19801.980198019803
+Tps: 1857.3551263001484
+FailRate: 0.0
+Latency: 5.0809688999999585
 -----------Report---------------
-txRate: 6666.66666667
-tps: 40.0560785099
-failRate: 0.0
-latency: 4.975305
+TotalSend: 10000
+BlockInfo: ['10000\n']
+TxRate: 18348.623853211007
+Tps: 1920.8605455243949
+FailRate: 0.0
+Latency: 4.8766628999999035
+=======New Round Testing transaction number: 12000=======
 -----------Report---------------
-txRate: 6451.61290323
-tps: 40.7414952129
-failRate: 0.0
-latency: 4.89052
------------Report---------------
-txRate: 6666.66666667
-tps: 41.1522633745
-failRate: 0.0
-latency: 4.84143
------------Report---------------
-txRate: 6451.61290323
-tps: 41.5973377704
-failRate: 0.0
-latency: 4.789005
------------Report---------------
-txRate: 6666.66666667
-tps: 42.4989375266
-failRate: 0.0
-latency: 4.687165
------------Report---------------
-txRate: 8888.88888889
-tps: 80.337417152
-failRate: 0.0
-latency: 4.9515025
------------Report---------------
-txRate: 8888.88888889
-tps: 83.5596406935
-failRate: 0.0
-latency: 4.75957
------------Report---------------
-txRate: 8510.63829787
-tps: 85.4518265328
-failRate: 0.0
-latency: 4.653795
------------Report---------------
-txRate: 8333.33333333
-tps: 86.8243976557
-failRate: 0.0
-latency: 4.5779625
------------Report---------------
-txRate: 8695.65217391
-tps: 84.6560846561
-failRate: 0.0
-latency: 4.6964725
------------Report---------------
-txRate: 9411.76470588
-tps: 162.601626016
-failRate: 0.0
-latency: 4.87428875
------------Report---------------
-txRate: 8988.76404494
-tps: 162.899613113
-failRate: 0.0
-latency: 4.86324875
------------Report---------------
-txRate: 8888.88888889
-tps: 160.449257922
-failRate: 0.0
-latency: 4.93946
------------Report---------------
-txRate: 9756.09756098
-tps: 163.900839992
-failRate: 0.0
-latency: 4.8358375
------------Report---------------
-txRate: 8988.76404494
-tps: 160.128102482
-failRate: 0.0
-latency: 4.94893625
------------Report---------------
-txRate: 10256.4102564
-tps: 245.098039216
-failRate: 0.0
-latency: 4.83082833333
------------Report---------------
-txRate: 10434.7826087
-tps: 252.259827622
-failRate: 0.0
-latency: 4.69303416667
------------Report---------------
-txRate: 10169.4915254
-tps: 259.684051071
-failRate: 0.0
-latency: 4.55784666667
------------Report---------------
-txRate: 9836.06557377
-tps: 257.621296694
-failRate: 0.0
-latency: 4.59035583333
------------Report---------------
-txRate: 9917.3553719
-tps: 240.24024024
-failRate: 0.0
-latency: 4.92791
------------Report---------------
-txRate: 10869.5652174
-tps: 396.667988893
-failRate: 0.0
-latency: 4.94481
------------Report---------------
-txRate: 10869.5652174
-tps: 404.203718674
-failRate: 0.0
-latency: 4.8466915
------------Report---------------
-txRate: 10050.2512563
-tps: 421.407501054
-failRate: 0.0
-latency: 4.6408965
------------Report---------------
-txRate: 10638.2978723
-tps: 408.163265306
-failRate: 0.0
-latency: 4.800245
------------Report---------------
-txRate: 10869.5652174
-tps: 410.67761807
-failRate: 0.0
-latency: 4.7702035
------------Report---------------
-txRate: 11904.7619048
-tps: 611.246943765
-failRate: 0.0
-latency: 4.764886
------------Report---------------
-txRate: 11494.2528736
-tps: 627.221409157
-failRate: 0.0
-latency: 4.63191233333
------------Report---------------
-txRate: 12448.1327801
-tps: 606.428138266
-failRate: 0.0
-latency: 4.80964633333
------------Report---------------
-txRate: 12931.0344828
-tps: 614.502253175
-failRate: 0.0
-latency: 4.74785766667
------------Report---------------
-txRate: 12605.0420168
-tps: 594.059405941
-failRate: 0.0
-latency: 4.90941666667
------------Report---------------
-txRate: 12987.012987
-tps: 782.166601486
-failRate: 0.0
-latency: 4.9376155
------------Report---------------
-txRate: 13377.9264214
-tps: 802.407221665
-failRate: 0.0
-latency: 4.813072
------------Report---------------
-txRate: 11661.8075802
-tps: 831.600831601
-failRate: 0.0
-latency: 4.6223535
------------Report---------------
-txRate: 13071.8954248
-tps: 814.332247557
-failRate: 0.0
-latency: 4.73761725
------------Report---------------
-txRate: 12422.3602484
-tps: 824.912353062
-failRate: 0.0
-latency: 4.6756725
------------Report---------------
-txRate: 12953.3678756
-tps: 974.089226573
-failRate: 0.0
-latency: 4.9013312
------------Report---------------
-txRate: 14792.8994083
-tps: 993.048659384
-failRate: 0.0
-latency: 4.8385132
------------Report---------------
-txRate: 14577.2594752
-tps: 985.221674877
-failRate: 0.0
-latency: 4.8693384
------------Report---------------
-txRate: 14204.5454545
-tps: 1011.32686084
-failRate: 0.0
-latency: 4.732846
------------Report---------------
-txRate: 13927.5766017
-tps: 999.800039992
-failRate: 0.0
-latency: 4.7976718
------------Report---------------
-txRate: 15915.1193634
-tps: 1248.95920067
-failRate: 0.0
-latency: 4.57555433333
------------Report---------------
-txRate: 14778.3251232
-tps: 1232.03285421
-failRate: 0.0
-latency: 4.63436583333
------------Report---------------
-txRate: 16000.0
-tps: 1246.105919
-failRate: 0.0
-latency: 4.59129283333
------------Report---------------
-txRate: 15544.0414508
-tps: 1226.24156959
-failRate: 0.0
-latency: 4.66205883333
------------Report---------------
-txRate: 15113.3501259
-tps: 1204.33560819
-failRate: 0.0
-latency: 4.74550416667
------------Report---------------
-txRate: 17467.2489083
-tps: -263.493039392
-failRate: 0.25
-latency: -23.0074215
+TotalSend: 12000
+BlockInfo: ['10000\n']
+TxRate: 19801.980198019803
+Tps: -410.1890971737971
+FailRate: 0.16666666666666666
+Latency: -24.69474639999978

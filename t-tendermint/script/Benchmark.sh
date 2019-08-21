@@ -1,34 +1,19 @@
 path2=$HOME/Benchmarking/t-tendermint/report
-path_report=$path2/report
-path_avg_tps=$path2/tps
-path_avg_latency=$path2/latency
-path_avg_txRate=$path2/txRate
-path_avg_fail=$path2/fail
-path_time=$path2/time
-
-path_var_tps=$path2/vTps
-path_var_latency=$path2/vLatency
-path_var_txRate=$path2/vTxRate
-path_var_fail=$path2/vFail
-
+PATH_REPORT=$path2/report
+PATH_TIME=$path2/time
 ################################
-ip=localhost
-threadNum=1  #concurent num
-nodeNum=1    #workload Send txNum
-txTime=5   #test time
-batchNum=0
 
 txTotalSend=(
-100
-200
-400
-800
-1200
-2000
-3000
-4000
-5000
-6000
+# 100
+# 200
+# 400
+# 800
+# 1200
+# 2000
+# 3000
+# 4000
+# 5000
+# 6000
 8000
 10000
 12000
@@ -36,51 +21,38 @@ txTotalSend=(
 16000
 18000
 20000
-#22000
-#24000
-#26000
-#28000
-#30000
 )
 
-ResetReport(){
-	rm $path_avg_tps
-	rm $path_avg_latency
-	rm $path_avg_txRate
-	rm $path_report
-	rm $path_var_tps
-	rm $path_var_latency
-	rm $path_var_txRate
-	rm $path_avg_fail
-	rm $path_var_fail
-	rm $path_time
-	touch $path_avg_tps
-	touch $path_avg_latency
-	touch $path_avg_txRate
-	touch $path_report
-	touch $path_var_tps
-	touch $path_var_latency
-	touch $path_var_txRate
-	touch $path_avg_fail
-	touch $path_var_fail
-	touch $path_time
+# Record Time
+logTime(){
+	time=$(date)
+	if [ "$2" = "1" ]
+	then
+		echo "total : $1  , time : $time" > $PATH_TIME
+	else
+		echo "total : $1  , time : $time" >> $PATH_TIME
+	fi
 }
 
 Benchmark() {
 
-	index=1
+	nonce=1
 	iter=$1
 	for i in "${txTotalSend[@]}"
 	do
-		./Performance.sh $i $1 $index
-
-		let index=index+iter
+		echo "=======New Round Testing transaction number: $i=======" >> $PATH_REPORT
+		# record time every round
+		logTime $i $nonce
+		# start new round testing  , [para1] : totalSend ,  [para2] : iter , [para3] : nonce
+		./oneRoundTesting.sh $i $1 $nonce
+		# update nonce value , if no update transaction will fail
+		let nonce=nonce+iter
 	done
 
 }
 
+
+
+echo "-------------------Start Testing-------------------" > $PATH_REPORT
 gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint0" -- './Benchmarking/t-tendermint/nodeScript/dataReset.sh'
-ResetReport
-Benchmark 5
-#[1]:iter
-#[2]:instance_name
+Benchmark 3

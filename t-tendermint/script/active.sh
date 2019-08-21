@@ -1,8 +1,6 @@
 if [ "$1" = "1" ]
 then
-    #gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" --command="nohup ./Benchmarking/t-tendermint/nodeScript/start.sh > /dev/null 2> /dev/null < /dev/null &"
-	#gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" --command="nohup ./Benchmarking/t-tendermint/nodeScript/abciServer.sh > /dev/null 2> /dev/null < /dev/null &"
-	gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" --command="./Benchmarking/t-tendermint/nodeScript/start.sh"
+	gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint$i" --command="./Benchmarking/t-tendermint/nodeScript/start.sh"
 else
 	cd /home/caideyi/Benchmarking/t-tendermint/configAutoGen
     ./configGen.sh $1
