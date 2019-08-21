@@ -1,6 +1,7 @@
  .*.swp
  .*.swo
- */vendor
+ **/vendor
  */.glide
  __pycache__
  *.txt
+ *.out
