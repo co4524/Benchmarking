@@ -1,5 +1,5 @@
 path=$HOME/mytestnet/node
-URL_path=$HOME/Benchmarking/t-tendermint/src/test/baseURL
+URL_path=$PWD/../src/test/baseURL
 nodeNum=$1
 base='10.140.4'
 rm $URL_path
@@ -114,4 +114,4 @@ ChangIp $nodeNum
 
 
 let nn=nodeNum-1
-cp -f /home/caideyi/mytestnet/node0/tendermint/config/genesis.json /home/caideyi/mytestnet/node$nn/tendermint/config/.
+cp -f $HOME/mytestnet/node0/tendermint/config/genesis.json $HOME/mytestnet/node$nn/tendermint/config/.
