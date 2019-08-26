@@ -1,0 +1,74 @@
+On branch EnvFriendly
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   .gitignore
+	modified:   README.md
+	deleted:    t-evm/TendermintOnEvm_benchmark/data/blockCommitTime.txt
+	deleted:    t-evm/TendermintOnEvm_benchmark/data/blockTxNum.txt
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/fail
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/fail.txt
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/latency
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/latency.txt
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/report
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/tps
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/tps.txt
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/txRate
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/txRate.txt
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/vFail
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/vLatency
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/vTps
+	deleted:    t-evm/TendermintOnEvm_benchmark/report/vTxRate
+	modified:   t-evm/configAutoGen/localConfig/addVa.sh
+	deleted:    t-evm/configAutoGen/localConfig/tmp.txt
+	modified:   t-evm/configAutoGen/remoteConfig/addVa.sh
+	deleted:    t-evm/configAutoGen/remoteConfig/tmp.txt
+	deleted:    t-evm/evm-lite-js/test/Nonce
+	deleted:    t-stellar/autoConfig/testnet/node0/key
+	deleted:    t-stellar/autoConfig/testnet/node0/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node1/key
+	deleted:    t-stellar/autoConfig/testnet/node1/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node2/key
+	deleted:    t-stellar/autoConfig/testnet/node2/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node3/key
+	deleted:    t-stellar/autoConfig/testnet/node3/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node4/key
+	deleted:    t-stellar/autoConfig/testnet/node4/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node5/key
+	deleted:    t-stellar/autoConfig/testnet/node5/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node6/key
+	deleted:    t-stellar/autoConfig/testnet/node6/stellar-core.cfg
+	deleted:    t-stellar/autoConfig/testnet/node7/key
+	deleted:    t-stellar/autoConfig/testnet/node7/stellar-core.cfg
+	deleted:    t-stellar/data/blockCommitTime.txt
+	deleted:    t-stellar/data/blockTxNum.txt
+	deleted:    t-stellar/data/txRequestTime
+	modified:   t-tendermint/configAutoGen/configGen.sh
+	deleted:    t-tendermint/configAutoGen/tmp.txt
+	deleted:    t-tendermint/data/blockCommitTime.txt
+	deleted:    t-tendermint/data/blockTxNum.txt
+	deleted:    t-tendermint/data/fail
+	deleted:    t-tendermint/data/latency
+	deleted:    t-tendermint/data/tps
+	deleted:    t-tendermint/data/txRate
+	deleted:    t-tendermint/data/txRequestTime
+	deleted:    t-tendermint/report/fail
+	deleted:    t-tendermint/report/latency
+	deleted:    t-tendermint/report/report
+	deleted:    t-tendermint/report/time
+	deleted:    t-tendermint/report/tps
+	deleted:    t-tendermint/report/txRate
+	deleted:    t-tendermint/report/vFail
+	deleted:    t-tendermint/report/vLatency
+	deleted:    t-tendermint/report/vTps
+	deleted:    t-tendermint/report/vTxRate
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	out
+	t-evm/configAutoGen/localConfig/template.txt
+	t-evm/configAutoGen/remoteConfig/template.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

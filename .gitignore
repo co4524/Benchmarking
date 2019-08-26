@@ -1,7 +1,23 @@
- .*.swp
- .*.swo
- **/vendor
- */.glide
- __pycache__
- *.txt
- *.out
+.*.swp
+.*.swo
+
+
+.glide
+
+env/
+venv/
+__pycache__
+
+
+**/vendor
+node_modules/
+jspm_packages/
+.npm
+
+# logs
+*.out
+*.log
+**/report/*
+**/data/*
+node*
+

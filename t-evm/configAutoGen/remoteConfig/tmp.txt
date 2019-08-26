@@ -1,6 +1,0 @@
-      "power": "1",
-      "name": "noder"
-    }
-  ],
-  "app_hash": ""
-}

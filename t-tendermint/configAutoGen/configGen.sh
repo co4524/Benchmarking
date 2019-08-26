@@ -46,7 +46,7 @@ addVa(){
 	cp -f $tendermintTestnetPath/node0/tendermint/config/genesis.json $tendermintPath/config/.
 	touch $tendermintPath/Val.txt
 	sed -n '1,6p' $tendermintPath/config/priv_validator_key.json >> $tendermintPath/Val.txt
-	cat ./tmp.txt >> $tendermintPath/Val.txt
+	cat ./template.txt >> $tendermintPath/Val.txt
 	sed -i "s/noder/node$1/g" $tendermintPath/Val.txt
 	sed -i '$d' $tendermintPath/config/genesis.json
 	sed -i '$d' $tendermintPath/config/genesis.json
