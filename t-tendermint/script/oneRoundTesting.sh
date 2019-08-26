@@ -6,12 +6,12 @@ PATH3=$HOME/Benchmarking/t-tendermint/src/test
 PATH_CALCULATE=$PATH3/cal.py
 PATH_WORKLOAD=$PATH3/workload.js
 PATH_GENERATE_RAW_TX=$PATH3/genRaw.js
-
+PATH_CONFIGURE=$HOME/Benchmarking/t-tendermint/configure.json
 #GCP instance name
-SCP_NODE_NAME="tendermint0"
+SCP_NODE_NAME=$(cat $PATH_CONFIGURE | jq -r '.scp_instance_name')
 
 workLoad(){
-	node $PATH_WORKLOAD $1 $2 $3
+	node $PATH_WORKLOAD $1 
 }
 
 scpInstance(){
@@ -20,7 +20,7 @@ scpInstance(){
 }
 
 checkSum(){
-	gcloud compute --project caideyi ssh --zone asia-east1-b "$2" -- "python Benchmarking/t-tendermint/data/checkSum.py $1"
+	gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "$2" -- "python Benchmarking/t-tendermint/data/checkSum.py $1"
 }
 
 
@@ -53,12 +53,14 @@ main(){
 
 		# calculate performance metric ( tps , latency , fail , tx_rate ) , [$1]= submit transactions num , [$i]= 0 ? overwrite file : append file
 		echo "CalPerformance....."
+		cd $PATH3
 		python3 $PATH_CALCULATE $1 $i
 		sleep 2
 	}
 
 	# calculate mean & variance(tps , latency , fail_rate , tx_rate ) in this round
 	echo "Evaluate Variance&Mean..."
+	cd ../../script
 	python3 variance.py $3
 
 }

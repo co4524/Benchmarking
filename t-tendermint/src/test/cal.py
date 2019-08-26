@@ -1,15 +1,20 @@
 import sys
+import json
+
 OVER_WRITE = False
 
-PATH_BLOCK_COMMIT_TIME = '/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt'
-PATH_TX_REQUEST_TIME = '/home/caideyi/Benchmarking/t-tendermint/data/txRequestTime'
-PATH_BLOCK_TX_NUM = '/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt'
+with open('../../configure.json' , 'r') as reader:
+    js = json.loads(reader.read())
 
-PATH_REPORT = '/home/caideyi/Benchmarking/t-tendermint/report/report'
-PATH_TPS = '/home/caideyi/Benchmarking/t-tendermint/data/tps'
-PATH_LATENCY = '/home/caideyi/Benchmarking/t-tendermint/data/latency'
-PATH_TX_RATE = '/home/caideyi/Benchmarking/t-tendermint/data/txRate'
-PATH_FAIL = '/home/caideyi/Benchmarking/t-tendermint/data/fail'
+PATH_BLOCK_COMMIT_TIME = js['home_path'] + '/Benchmarking/t-tendermint/data/blockCommitTime.txt'
+PATH_TX_REQUEST_TIME = js['home_path'] + '/Benchmarking/t-tendermint/data/txRequestTime'
+PATH_BLOCK_TX_NUM = js['home_path'] + '/Benchmarking/t-tendermint/data/blockTxNum.txt'
+
+PATH_REPORT = js['home_path'] + '/Benchmarking/t-tendermint/report/report'
+PATH_TPS = js['home_path'] + '/Benchmarking/t-tendermint/data/tps'
+PATH_LATENCY = js['home_path'] + '/Benchmarking/t-tendermint/data/latency'
+PATH_TX_RATE = js['home_path'] + '/Benchmarking/t-tendermint/data/txRate'
+PATH_FAIL = js['home_path'] + '/Benchmarking/t-tendermint/data/fail'
 
 TOTAL_SEND = int( sys.argv[1] )
 

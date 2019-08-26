@@ -4,16 +4,16 @@ PATH_TIME=$path2/time
 ################################
 
 txTotalSend=(
-# 100
-# 200
-# 400
-# 800
-# 1200
-# 2000
-# 3000
-# 4000
-# 5000
-# 6000
+ 100
+ 200
+ 400
+ 800
+ 1200
+ 2000
+ 3000
+ 4000
+ 5000
+ 6000
 8000
 10000
 12000
@@ -55,4 +55,4 @@ Benchmark() {
 
 echo "-------------------Start Testing-------------------" > $PATH_REPORT
 gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint0" -- './Benchmarking/t-tendermint/nodeScript/dataReset.sh'
-Benchmark 3
+Benchmark 10

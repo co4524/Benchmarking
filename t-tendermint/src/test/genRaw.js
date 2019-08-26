@@ -1,10 +1,11 @@
 const sleep = require('sleep');
 const ethTx = require('ethereumjs-tx');
 const fs = require('fs');
-
+const PATH_CONFIGURE =  require('../../configure.json')
+const PATH_HOME = PATH_CONFIGURE.home_path
 // ethereum root directory (for retreive keystore) and keystore password
-const source_privKeydir = '/home/caideyi/Benchmarking/t-tendermint/src/test/testAccount/pKey'
-const output_dir = '/home/caideyi/Benchmarking/t-tendermint/src/test/RawTx'
+const source_privKeydir = PATH_HOME + '/Benchmarking/t-tendermint/src/test/testAccount/pKey'
+const output_dir = PATH_HOME + '/Benchmarking/t-tendermint/src/test/RawTx'
 const des_address = '0x6666666666666666666666666666666666666666'
 //const baseURL = 'http://localhost:8080';
 const ITER = parseInt( process.argv[2] ,10) ; 

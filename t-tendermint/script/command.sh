@@ -23,11 +23,8 @@ activeNode(){
             # build configure file
 	        cd /home/caideyi/Benchmarking/t-tendermint/configAutoGen
             ./configGen.sh $1
-            # modify node private address
-            cd /home/caideyi/Benchmarking/t-tendermint/src/test
-            ./preprocess.sh $2
             # run node on each gcp machine
-            for ((i=0 ; i < $2 ; i ++)){
+            for ((i=0 ; i < $1 ; i ++)){
                 # reset node data
                 gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint$i" --command="rm -r .tendermint"
                 # transfer config file
@@ -44,7 +41,7 @@ oneRoundTest(){
         help
     else
         # reset data
-        gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint" -- './home/caideyi/Benchmarking/t-tendermint/nodeScript/dataReset.sh'
+        gcloud compute --project "caideyi" ssh --zone "asia-east1-b" "tendermint0" -- './home/caideyi/Benchmarking/t-tendermint/nodeScript/dataReset.sh'
         # testing one time
         ./oneRoundTesting.sh $1 1 $2
     fi
@@ -68,22 +65,22 @@ benchmark(){
 
     # number of transactions you want to test
     txTotalSend=(
-    # 100
-    # 200
-    # 400
-    # 800
-    # 1200
-    # 2000
-    # 3000
-    # 4000
-    # 5000
-    # 6000
+    100
+    200
+    400
+    800
+    1200
+    2000
+    3000
+    4000
+    5000
+    6000
     8000
     10000
-    12000
-    14000
-    16000
-    18000
+   12000
+   14000
+   16000
+   18000
     20000
     )
 

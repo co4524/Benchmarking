@@ -1,20 +1,24 @@
 import numpy as np
 import sys
+import json
 
-PATH_TPS="/home/caideyi/Benchmarking/t-tendermint/data/tps"
-PATH_TX_RATE="/home/caideyi/Benchmarking/t-tendermint/data/txRate"
-PATH_LATENCY="/home/caideyi/Benchmarking/t-tendermint/data/latency"
-PATH_FAIL="/home/caideyi/Benchmarking/t-tendermint/data/fail"
+with open('../../configure.json' , 'r') as reader:
+    js = json.loads(reader.read())
 
-PATH_AVG_TPS="/home/caideyi/Benchmarking/t-tendermint/report/tps"
-PATH_AVG_LATENCY="/home/caideyi/Benchmarking/t-tendermint/report/latency"
-PATH_AVG_TX_RATE="/home/caideyi/Benchmarking/t-tendermint/report/txRate"
-PATH_AVG_FAIL="/home/caideyi/Benchmarking/t-tendermint/report/fail"
+PATH_TPS= js['home_path'] + ' /Benchmarking/t-tendermint/data/tps'
+PATH_TX_RATE= js['home_path'] + '/Benchmarking/t-tendermint/data/txRate'
+PATH_LATENCY= js['home_path'] + '/Benchmarking/t-tendermint/data/latency'
+PATH_FAIL= js['home_path'] + '/Benchmarking/t-tendermint/data/fail'
 
-PATH_VAR_TPS="/home/caideyi/Benchmarking/t-tendermint/report/vTps"
-PATH_VAR_LATENCY="/home/caideyi/Benchmarking/t-tendermint/report/vLatency"
-PATH_VAR_TX_RATE="/home/caideyi/Benchmarking/t-tendermint/report/vTxRate"
-PATH_VAR_FAIL="/home/caideyi/Benchmarking/t-tendermint/report/vFail"
+PATH_AVG_TPS=js['home_path'] + '/Benchmarking/t-tendermint/report/tps'
+PATH_AVG_LATENCY=js['home_path'] + '/Benchmarking/t-tendermint/report/latency'
+PATH_AVG_TX_RATE=js['home_path'] + '/Benchmarking/t-tendermint/report/txRate'
+PATH_AVG_FAIL=js['home_path'] + '/Benchmarking/t-tendermint/report/fail'
+
+PATH_VAR_TPS=js['home_path'] + '/Benchmarking/t-tendermint/report/vTps'
+PATH_VAR_LATENCY=js['home_path'] + '/Benchmarking/t-tendermint/report/vLatency'
+PATH_VAR_TX_RATE=js['home_path'] + '/Benchmarking/t-tendermint/report/vTxRate'
+PATH_VAR_FAIL=js['home_path'] + '/Benchmarking/t-tendermint/report/vFail'
 
 OVER_WRITE = False
 
