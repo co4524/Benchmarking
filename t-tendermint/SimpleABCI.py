@@ -27,7 +27,7 @@ authority = utils.privtoaddr(operator_key)
 authority_address = w3.toChecksumAddress('0x' + authority.hex())
 path1 = "/home/caideyi/Benchmarking/t-tendermint/data/blockCommitTime.txt"
 path2 = "/home/caideyi/Benchmarking/t-tendermint/data/blockTxNum.txt"
-
+path3 = "/home/caideyi/Benchmarking/t-tendermint/data/txReceiveTime"
 
 class RequestFailedException(Exception):
     """request failed without success http status"""
@@ -85,6 +85,9 @@ class PlasmaCash(BaseApplication):
         return ResponseInitChain()
 
     def check_tx(self, tx) -> ResponseCheckTx:
+
+        f = open(path3 , "a") 
+        f.write(format(int(time.time()*1000))+ "\n")
         '''
         end_point = '/check_tx'
         data = {'tx': tx}
@@ -94,7 +97,7 @@ class PlasmaCash(BaseApplication):
         except Exception as e:
             print(e)
             return ResponseCheckTx(code=1)
-        '''
+        '''	
         return ResponseCheckTx(code=CodeTypeOk)
     
     def deliver_tx(self, tx) -> ResponseDeliverTx:
