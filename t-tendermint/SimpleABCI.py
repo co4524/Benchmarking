@@ -99,18 +99,8 @@ class PlasmaCash(BaseApplication):
         except Exception as e:
             print(e)
             return ResponseCheckTx(code=1)
-<<<<<<< HEAD
         '''	
         return ResponseCheckTx(code=CodeTypeOk)
-=======
-        '''
-        if tx in self.seen:
-            print("U R idiot")
-            return ResponseCheckTx(code=1)
-        else:
-            self.seen[tx] = True
-            return ResponseCheckTx(code=0)
->>>>>>> afd13909fa6b783be452e7f46fad0e5e432db23c
     
     def deliver_tx(self, tx) -> ResponseDeliverTx:
         '''
