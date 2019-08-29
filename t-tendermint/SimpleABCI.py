@@ -82,6 +82,8 @@ class PlasmaCash(BaseApplication):
     def init_chain(self, req) -> ResponseInitChain:
         self.last_block_height = 0
         self.txIndex = 0
+        self.seen = {}
+        self.done = {}
         return ResponseInitChain()
 
     def check_tx(self, tx) -> ResponseCheckTx:
@@ -97,8 +99,18 @@ class PlasmaCash(BaseApplication):
         except Exception as e:
             print(e)
             return ResponseCheckTx(code=1)
+<<<<<<< HEAD
         '''	
         return ResponseCheckTx(code=CodeTypeOk)
+=======
+        '''
+        if tx in self.seen:
+            print("U R idiot")
+            return ResponseCheckTx(code=1)
+        else:
+            self.seen[tx] = True
+            return ResponseCheckTx(code=0)
+>>>>>>> afd13909fa6b783be452e7f46fad0e5e432db23c
     
     def deliver_tx(self, tx) -> ResponseDeliverTx:
         '''
@@ -111,8 +123,12 @@ class PlasmaCash(BaseApplication):
             print(e)
             return ResponseDeliverTx(code=1)
         '''
-        self.txIndex += 1
-        return ResponseDeliverTx(code=CodeTypeOk)
+        if tx in self.done:
+            print("I am not doing and U R IDIOT")
+            return ResponseDeliverTx(code=1)
+        else:
+            self.txIndex += 1
+            return ResponseDeliverTx(code=CodeTypeOk)
 
     def query(self, req) -> ResponseQuery:
         return ResponseQuery(code=CodeTypeOk, value='0', height=self.last_block_height)
@@ -127,9 +143,15 @@ class PlasmaCash(BaseApplication):
         return ResponseCommit(data=bytes.fromhex(ret.text))
         '''
         if self.txIndex != 0:
-
-            self.f1 = open(path1, 'a')
-            self.f2 = open(path2, 'a')
+            try:
+                self.f1 = open(path1, 'a')
+                self.f2 = open(path2, 'a')
+            except:
+                path1 = './time.txt'
+                path2 = './num.txt'
+                self.f1 = open(path1, 'a')
+                self.f2 = open(path2, 'a')
+                print("change path to current directory")
             self.f1.write(format(int(time.time()*1000)))
             self.f1.write('\n')
             self.f1.flush()

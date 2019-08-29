@@ -20,15 +20,16 @@ const total_tx = parseInt( process.argv[2] ,10) ;
 var source =  require('./keystore.json');
 var acc =  require('./testAcc.json');
 var baseURL2 = [];
+const stellar_core = "http://10.140.3.0:11626"
 //console.log(sourceKeys);
 //var destinationId = 'GBBAJPWGVUWJM7DWKKKH5NOONYJL3NPWRZTQCYFQPAUYN34LH6NNNJZ3';
 // Transaction will hold a built transaction we can resubmit if the result is unknown.
-
-
+//testAPI()
 main()
-
-
-
+// async function testAPI(){
+//   let res = await api.getHorInfo(horizon)
+//   console.log(res.history_latest_ledger)
+// }
 async function main () {
 
   if (isNaN(total_tx)) {
@@ -36,106 +37,87 @@ async function main () {
     return true ;
   }
 
+
   let baseURL = await getURL(URL_dir);
 
   await url(baseURL);
   console.log(baseURL2);
   await getServer(baseURL2);
+  let StartBalance = await LoadAccount(source.table[0].publicKey) ; 
+  let EndBalance = Number(StartBalance)+total_tx ;
+  console.log("Starting Value" , StartBalance) ;
 
   let txInfo = await workloader( total_tx );
-  let request_time = txInfo[1];
-  let ledger_id = txInfo[0];
+  let request_time = txInfo[0];
+  let startLedgerIndex = txInfo[1];
+  let trigger = 0
+  let trigger2 = 0
+  let trigger3 = true
 
-  var LederID = [];
-  for (var i = 0 ; i < ledger_id.length ; i++ ){
-    LederID[i] = await ledger_id[i];
-    //console.log( "transaction " , i , " ledger:   " , LederID[i] );
+  while(trigger3){
+    StartBalance = await LoadAccount(source.table[0].publicKey) ;
+    console.log("Wait transaction compelete Now:" , Number(StartBalance) , " Expect : ", EndBalance)
+    let Info2 = await api.getCoreInfo(stellar_core)
+    let Info = await api.getHorInfo(baseURL2[0])
+    let EndLedgerIndex = Info.history_latest_ledger
+    console.log("StellarBlockHeight" , Info2.info.ledger.num )
+    console.log("HorBlockHeight" , EndLedgerIndex  , "Trigger" , trigger , "Trigger2" , trigger2)
+    if(Info2.info.ledger.num==EndLedgerIndex+1){
+      trigger2+=1
+    }
+    if(Info2.info.ledger.num==EndLedgerIndex || trigger2 > 2 ){
+      trigger+=1
+      if (Number(StartBalance) == EndBalance || trigger==3 || trigger2 > 2 ) {
+        console.log("transaction done")
+        let data = await getLedgerInfo ( startLedgerIndex , EndLedgerIndex  ) ;
+
+        //Output data
+        await outputData( path_blockTxNum , data[0] );
+        await outputData( path_CommitTime , data[1] );
+        await outputData( path_txRequestTime , request_time );
+        console.log("BlockHeight: " , EndLedgerIndex )
+        break
+      }
+    }
+    await sleep.sleep(5)
   }
 
-  let data = await getLedgerInfo ( LederID , request_time ) ;
 
-  //Output data
-  await outputData( path_blockTxNum , data[0] );
-  await outputData( path_CommitTime , data[1] );
-  await outputData( path_txRequestTime , data[2] );
+
 
 }
 
-async function getLedgerInfo ( tx , reqTime) {
 
-  var stat = {};
-  var error = {};
-  var time = {};
-  var blockTxNum = [];
-  var blockCommitTime = [];
-  var reqestTime = [];
+async function LoadAccount ( pub ) {
+  return new Promise((resolve, reject) => { 
 
-
-    //statistics tx's Info
-    tx.forEach(function(item) {
-      if (typeof item == "number") {
-        stat[item] = stat[item] ? stat[item] + 1 : 1;
-      }
-      else {
-        error[item] = error[item] ? error[item] + 1 : 1;
-      }
+    server[0].loadAccount(pub).then(function(Account) {
+      Account.balances.forEach(function(balance) {
+        resolve(balance.balance);
+      });
     });
+  })
+
+}
 
 
-    //Get requestTime for each block
-    for (var i = 0 ; i < Object.keys(stat).length ; i ++ ){
-      time[Object.keys(stat)[i]] = reqestTime.slice();
+
+async function getLedgerInfo ( start , end ) {
+
+  var blockTxNum = []
+  var blockCommitTime = []
+
+  for (var i = start ; i < end+1 ; i++ ) {
+    let result = await api.getLedger( baseURL2[0] , i ); 
+    //console.log(moment.utc( result.closed_at.replace('Z','.500-00:00') ).valueOf())
+    if(result.successful_transaction_count!=0){
+      blockCommitTime.push(moment.utc( result.closed_at.replace('Z','.500-00:00') ).valueOf())
+      blockTxNum.push(result.successful_transaction_count)
+      console.log("Ledger" , i , "  :" , result.successful_transaction_count)
     }
+  }
 
-    for (var i = 0 ; i < reqTime.length ; i ++){
-      for (var j = 0 ; j < Object.keys(stat).length ; j ++ ){
-
-        if ( tx[i] == Object.keys(stat)[j] ){
-          time[Object.keys(stat)[j]].push(reqTime[i]);
-          break;
-        }
-        
-      }
-    }
-    // for (var i = 0 ; i < Object.keys(stat).length ; i ++){
-    //   console.log( "Ledger" , Object.keys(stat)[i] , "   " , time[Object.keys(stat)[i]].length);
-    // }
-
-
-
-    //Get transaction number for each block
-    var num = 0;
-    Object.keys(stat).forEach(function(item) {
-      blockTxNum[num] = stat[item];
-      num += 1;
-    })
-
-    //Get commit time for each block
-    for (var i = 0 ; i < Object.keys(stat).length ; i ++){
-      let result = await api.getLedger( baseURL2[0] , Object.keys(stat)[i] ); 
-      blockCommitTime[i] = moment.utc( result.closed_at.replace('Z','.500-00:00') ).valueOf() ;
-    }
-
-    //Get requestTime for each block  - append to one array
-    num = 0;
-    for (var i = 0 ; i < Object.keys(stat).length ; i ++){
-      let arr = time[Object.keys(stat)[i]] ;
-      for (var j = 0 ; j < arr.length ; j ++){
-        reqestTime[num] = arr[j];
-        num += 1;
-      }
-    }
-
-    //debug
-     console.log( "ReqestTime" , reqestTime);
-     console.log( "TxNum" , blockTxNum );
-     console.log( "CommitTime" , blockCommitTime );
-     console.log("Stat: " , stat );
-     console.log("Error" , error );
-
-    return [ blockTxNum , blockCommitTime , reqestTime ] ;
-
-
+  return [ blockTxNum , blockCommitTime ] 
 
 }
 
@@ -148,6 +130,7 @@ async function workloader ( amount ) {
   var sendTime = [];
   var ll = baseURL2.length;
   var rawtx = [];
+
 
   console.log("Generate transaction....");
   for (var i = 0 ; i < amount ; i++){
@@ -162,16 +145,30 @@ async function workloader ( amount ) {
     rawtx[i] = await tx[i];
   }
 
+  var startLedgerIndex = 0 ;
+  let Info = await api.getCoreInfo(stellar_core)
+  console.log("NowBlockHeight" , Info.info.ledger.num )
 
-  await sleep.sleep(1);
+  while(true){
+    let Info2 = await api.getCoreInfo(stellar_core)
+    console.log("NowBlockHeight" , Info2.info.ledger.num )
+    if (Info.info.ledger.num!=Info2.info.ledger.num){ 
+      startLedgerIndex = Info2.info.ledger.num 
+      break;
+    }
+    await sleep.msleep(500)
+  }
+  console.log("BlockHeight: " , startLedgerIndex )
+
   console.log("Sending transaction....");
   for (var i = 0 ; i < amount ; i++){
-    res[i] = sendTx( rawtx[i] , i%ll );
+    sendTx( rawtx[i] , i%ll );
     sendTime[i] = moment().valueOf();
   }
 
-  await Promise.all(res) ;
-  return [res , sendTime ];
+
+  await Promise.all(sendTime) ;
+  return [sendTime , startLedgerIndex];
 
 }
 
@@ -215,7 +212,7 @@ async function GenRawTx( from_privateKey , des_publicKey , index ){
           // A memo allows you to add your own metadata to a transaction. It's
           // optional and does not affect how Stellar treats the transaction.
           .addMemo(StellarSdk.Memo.text('Test Transaction'))
-          .setTimeout(10000)
+          .setTimeout(1000000)
           .build();
         // Sign the transaction to prove you are actually the person sending it.
         transaction.sign(sourceKeys);

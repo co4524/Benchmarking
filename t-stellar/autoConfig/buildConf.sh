@@ -2,7 +2,7 @@
 
 #Setting
 nodeNum=$1
-base=10.140.1
+base=10.140.3
 ip=0
 port=11625
 

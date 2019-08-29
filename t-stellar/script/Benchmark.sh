@@ -72,5 +72,5 @@ Benchmark() {
 }
 
 ResetReport
-Benchmark 10
+Benchmark 5
 #[1]:iter

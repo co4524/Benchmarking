@@ -1,49 +1,40 @@
 const sleep = require('sleep');
 const ethTx = require('ethereumjs-tx');
 const fs = require('fs');
-
+const PATH_CONFIGURE =  require('../../configure.json')
+const PATH_HOME = PATH_CONFIGURE.home_path
 // ethereum root directory (for retreive keystore) and keystore password
-const URL_dir = '/home/caideyi/evm-lite-js/test/baseURL'
-const source__AddressDir = '/home/caideyi/Benchmarking/t-tendermint/src/test/testAccount/address'
-const source_privKeydir = '/home/caideyi/Benchmarking/t-tendermint/src/test/testAccount/pKey'
-const output_dir = '/home/caideyi/Benchmarking/t-tendermint/src/test/RawTx'
+const source_privKeydir = PATH_HOME + '/Benchmarking/t-tendermint/src/test/testAccount/pKey'
+const output_dir = PATH_HOME + '/Benchmarking/t-tendermint/src/test/RawTx'
 const des_address = '0x6666666666666666666666666666666666666666'
 //const baseURL = 'http://localhost:8080';
-const iter = parseInt( process.argv[2] ,10) ; 
-const _value = parseInt( process.argv[3] ,10) ; 
-var baseURL = [];
+const ITER = parseInt( process.argv[2] ,10) ; 
+const NONCE = parseInt( process.argv[3] ,10) ; 
+
 testBasicAPI()
 
 async function testBasicAPI() {
 
-
+//  Get private key
     let key = await getKey( source_privKeydir );
     console.log('Getting test account privKey');
-    await sleep.sleep(1);
 
-    console.log( 'Generate ' , iter , 'Rawtx' );
-    let rawTxList = await genRawtx( _value , key , iter );
-    await sleep.sleep(1);
+//  Generate Raw transactions
+    console.log( 'Generate ' , ITER , 'Rawtx' );
+    let rawTxList = await genRawtx( NONCE , key , ITER );
 
+//  Output RawTx to [output_dir]
     console.log( 'Write RawTx File' );
     await writeRawTx( output_dir , rawTxList);
-    //console.log( 'Write Nonce File' );
-    //await writeRawTx( output_dir2 , ac_nonce );
-    //console.log(time);
-    //console.log("ST: ", moment(time).format('YYYY-MM-DDTHH:mm:ss.SSSS'));
-    //console.log("ET: ", moment(time2).format('YYYY-MM-DDTHH:mm:ss.SSSS'));
 
 }
 
 
-async function genRawtx ( _nonce , privateKey , iter ) {
+async function genRawtx ( _nonce , privateKey , _iter ) {
 
     var rawTxList = [];
     var num = 0 ;
-    var ll = baseURL.length
-    for ( var i = 0 ; i < iter ; i++ ){
-
-        //console.log(result);
+    for ( var i = 0 ; i < _iter ; i++ ){
         let txParams = {
             nonce: _nonce ,//+ addValue,
             to: des_address,
@@ -53,7 +44,6 @@ async function genRawtx ( _nonce , privateKey , iter ) {
         let tx = new ethTx(txParams);
         tx.sign(privateKey[num]);
         let rawTx = '0x' + tx.serialize().toString('hex');
-	//console.log(rawTx);
         rawTxList[i] = rawTx;
         num+=1;
     }

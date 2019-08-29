@@ -1,64 +1,81 @@
 import numpy as np
+import sys
+import json
 
-path_tps="/home/caideyi/Benchmarking/t-tendermint/report/tps.txt"
-path_txRate="/home/caideyi/Benchmarking/t-tendermint/report/txRate.txt"
-path_latency="/home/caideyi/Benchmarking/t-tendermint/report/latency.txt"
-path_fail="/home/caideyi/Benchmarking/t-tendermint/report/fail.txt"
+with open('../../configure.json' , 'r') as reader:
+    js = json.loads(reader.read())
 
-path_avg_tps="/home/caideyi/Benchmarking/t-tendermint/report/tps"
-path_avg_latency="/home/caideyi/Benchmarking/t-tendermint/report/latency"
-path_avg_txRate="/home/caideyi/Benchmarking/t-tendermint/report/txRate"
-path_avg_fail="/home/caideyi/Benchmarking/t-tendermint/report/fail"
+PATH_TPS= js['home_path'] + ' /Benchmarking/t-tendermint/data/tps'
+PATH_TX_RATE= js['home_path'] + '/Benchmarking/t-tendermint/data/txRate'
+PATH_LATENCY= js['home_path'] + '/Benchmarking/t-tendermint/data/latency'
+PATH_FAIL= js['home_path'] + '/Benchmarking/t-tendermint/data/fail'
 
-path_var_tps="/home/caideyi/Benchmarking/t-tendermint/report/vTps"
-path_var_latency="/home/caideyi/Benchmarking/t-tendermint/report/vLatency"
-path_var_txRate="/home/caideyi/Benchmarking/t-tendermint/report/vTxRate"
-path_var_fail="/home/caideyi/Benchmarking/t-tendermint/report/vFail"
+PATH_AVG_TPS=js['home_path'] + '/Benchmarking/t-tendermint/report/tps'
+PATH_AVG_LATENCY=js['home_path'] + '/Benchmarking/t-tendermint/report/latency'
+PATH_AVG_TX_RATE=js['home_path'] + '/Benchmarking/t-tendermint/report/txRate'
+PATH_AVG_FAIL=js['home_path'] + '/Benchmarking/t-tendermint/report/fail'
 
-fp_tps = open(path_tps, "r")
-fp_txRate = open(path_txRate, "r")
-fp_latency = open(path_latency, "r")
-fp_fail = open(path_fail, "r")
+PATH_VAR_TPS=js['home_path'] + '/Benchmarking/t-tendermint/report/vTps'
+PATH_VAR_LATENCY=js['home_path'] + '/Benchmarking/t-tendermint/report/vLatency'
+PATH_VAR_TX_RATE=js['home_path'] + '/Benchmarking/t-tendermint/report/vTxRate'
+PATH_VAR_FAIL=js['home_path'] + '/Benchmarking/t-tendermint/report/vFail'
 
-tps = fp_tps.readlines()
-txRate = fp_txRate.readlines()
-latency = fp_latency.readlines()
-fail = fp_fail.readlines()
+OVER_WRITE = False
 
-fp_tps.close()
-fp_txRate.close()
-fp_latency.close()
-fp_fail.close()
+# start testing , over write report data : tps , latency , fail , txRate
+def writeFileOption():
+    if ( int(sys.argv[1]) ==1 ):
+        global OVER_WRITE
+        OVER_WRITE = True
 
-def StringToFloat(array):
+# read file
+def readFile( _file_path ):
+    fp = open(_file_path, "r")
+    obj = fp.readlines()
+    fp.close()
+    return obj
+
+# change array type from string to float
+def StringToFloat(_array):
     arr = []
-    for i in range(len(array)):
-        arr.append(float(array[i]))
+    for i in range(len(_array)):
+        arr.append(float(_array[i]))
     return arr
 
-def calMean(array , dir):
-    f = open( dir , "a")
-    arr = StringToFloat(array)
+# calculate average
+def calMean(_array , _dir):
+    if (OVER_WRITE==True):
+        f = open( _dir , "w")
+    else:
+        f = open( _dir , "a")
+    arr = StringToFloat(_array)
     value = np.mean(arr)
     f.write( str(value) + "\n")
     f.close()
 
-def calVar(array , dir):
-    f = open( dir , "a")
-    arr = StringToFloat(array)
+# calculate variance
+def calVar(_array , _dir):
+    if (OVER_WRITE==True):
+        f = open( _dir , "w")
+    else:
+        f = open( _dir , "a")
+    arr = StringToFloat(_array)
     value = np.var(arr)
     f.write( str(value) + "\n")
     f.close()
 
 
-calMean(tps , path_avg_tps)
-calVar(tps , path_var_tps)
+def outputValue( _read_path , _avg_out_path , _var_out_path):
+    value=readFile(_read_path)
+    calMean(value , _avg_out_path)
+    calVar(value , _var_out_path)
 
-calMean(latency , path_avg_latency)
-calVar(latency , path_var_latency)
 
-calMean(txRate , path_avg_txRate)
-calVar(txRate , path_var_txRate)
+def main():
+    writeFileOption()
+    outputValue( PATH_TPS , PATH_AVG_TPS , PATH_VAR_TPS)
+    outputValue( PATH_TX_RATE , PATH_AVG_LATENCY , PATH_VAR_LATENCY)
+    outputValue( PATH_LATENCY , PATH_AVG_TX_RATE , PATH_VAR_TX_RATE)
+    outputValue( PATH_FAIL , PATH_AVG_FAIL , PATH_VAR_FAIL)
 
-calMean(fail , path_avg_fail)
-calVar(fail , path_var_fail)
+main()

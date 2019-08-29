@@ -52,7 +52,9 @@ def txRate():
     print("start",start)
     print("end",end)
     dur = (float(end) - float(start)) / 1000
-    txRate = float(len(s_txRequestTime)) / float(dur)
+    print("dur",dur)
+    print("total" , total_send )
+    txRate = float(total_send) / float(dur)
     return txRate
 
 def tps():
